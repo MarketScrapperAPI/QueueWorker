@@ -16,6 +16,9 @@ const ENV_REDIS_PORT = "REDIS_PORT"
 const ENV_REDIS_DB = "REDIS_DB"
 const ENV_REDIS_PASSWORD = "REDIS_PASSWORD"
 
+const ENV_ITEM_API_HOST = "ITEM_API_HOST"
+const ENV_ITEM_API_PORT = "ITEM_API_PORT"
+
 func main() {
 
 	err := godotenv.Load()
@@ -41,6 +44,15 @@ func main() {
 		panic("invalid Redis DB number: " + redisDB)
 	}
 
+	itemAPIHost := os.Getenv(ENV_ITEM_API_HOST)
+	if itemAPIHost == "" {
+		panic("missing env var: " + ENV_ITEM_API_HOST)
+	}
+	itemAPIPort := os.Getenv(ENV_ITEM_API_PORT)
+	if itemAPIPort == "" {
+		panic("missing env var: " + ENV_ITEM_API_PORT)
+	}
+
 	// Redis
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     redisHost + ":" + redisPort,
@@ -52,11 +64,15 @@ func main() {
 
 	subscriber := rdb.Subscribe(ctx, "items")
 
+	//c := client.NewMarketAPIGRPCClient(itemAPIHost + ":" + itemAPIPort)
+
 	for {
 		msg, err := subscriber.ReceiveMessage(ctx)
 		if err != nil {
 			panic(err)
 		}
+
+		//c.Client.CreateItem(ctx, &pb.ItemRequest{})
 
 		fmt.Println(msg.Payload)
 	}
