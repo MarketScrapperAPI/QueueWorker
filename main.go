@@ -2,13 +2,17 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
 
+	pb "github.com/MarketScrapperAPI/ItemAPI/proto/gen"
 	"github.com/go-redis/redis/v8"
 	"github.com/joho/godotenv"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 const ENV_REDIS_HOST = "REDIS_HOST"
@@ -64,7 +68,9 @@ func main() {
 
 	subscriber := rdb.Subscribe(ctx, "items")
 
-	//c := client.NewMarketAPIGRPCClient(itemAPIHost + ":" + itemAPIPort)
+	conn, err := grpc.Dial("localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+	client := pb.NewItemApiClient(conn)
 
 	for {
 		msg, err := subscriber.ReceiveMessage(ctx)
@@ -72,8 +78,19 @@ func main() {
 			panic(err)
 		}
 
-		//c.Client.CreateItem(ctx, &pb.ItemRequest{})
+		req := pb.CreateItemRequest{}
+
+		err = json.Unmarshal([]byte(msg.Payload), &req)
+		if err != nil {
+			panic(err)
+		}
+
+		response, err := client.CreateItem(context.Background(), &req)
+		if err != nil {
+			log.Println(err)
+		}
 
 		fmt.Println(msg.Payload)
+		fmt.Println(response)
 	}
 }

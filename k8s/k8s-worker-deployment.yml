@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: queue-worker
+  labels:
+    app: queue-worker
+spec:
+  selector:
+    matchLabels:
+      app: queue-worker
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: queue-worker
+    spec:
+      containers:
+      - name: queue-worker
+        image: mrbolas/queue-worker:v1-release
+        ports:
+        - containerPort: 8080
+        env:
+        - name: REDIS_HOST
+          value: "redis-cart"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_DB
+          value: "0"
+        - name: ITEM_API_HOST
+          value: "itemapi"
+        - name: ITEM_API_PORT
+          value: "8080"
