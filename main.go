@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -85,12 +84,13 @@ func main() {
 			panic(err)
 		}
 
+		log.Printf("req: %+v\n", req)
+
 		response, err := client.CreateItem(context.Background(), &req)
 		if err != nil {
 			log.Println(err)
 		}
-
-		fmt.Println(msg.Payload)
-		fmt.Println(response)
+		log.Printf("payload: %+v\n", msg.Payload)
+		log.Printf("req: %+v\n", response)
 	}
 }
