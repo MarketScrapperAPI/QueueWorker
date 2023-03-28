@@ -20,6 +20,7 @@ spec:
         image: mrbolas/queue-worker:v1-release
         ports:
         - containerPort: 8080
+        imagePullPolicy: Always
         env:
         - name: REDIS_HOST
           value: "redis-cart"
