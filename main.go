@@ -68,7 +68,7 @@ func main() {
 
 	subscriber := rdb.Subscribe(ctx, "items")
 
-	conn, err := grpc.Dial("localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(itemAPIHost+":"+itemAPIPort, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	client := pb.NewItemApiClient(conn)
 
