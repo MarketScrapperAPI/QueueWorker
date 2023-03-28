@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	pb "github.com/MarketScrapperAPI/ItemAPI/proto/gen"
+	"github.com/MarketScrapperAPI/QueueWorker/models"
 	"github.com/go-redis/redis/v8"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
@@ -72,25 +73,39 @@ func main() {
 	client := pb.NewItemApiClient(conn)
 
 	for {
-		msg, err := subscriber.ReceiveMessage(ctx)
+		msgStr, err := subscriber.ReceiveMessage(ctx)
 		if err != nil {
 			panic(err)
 		}
 
-		req := pb.CreateItemRequest{}
+		msg := models.Message{}
 
-		err = json.Unmarshal([]byte(msg.Payload), &req)
+		err = json.Unmarshal([]byte(msgStr.Payload), &msg)
 		if err != nil {
 			panic(err)
 		}
 
-		log.Printf("req: %+v\n", req)
+		log.Printf("msg: %+v\n", msg)
+
+		req := pb.CreateItemRequest{
+			Name:             msg.Item.Name,
+			Brand:            msg.Item.Brand,
+			Package:          msg.Item.Package,
+			PricePerItem:     msg.Item.PricePerItem,
+			PricePerQuantity: *msg.Item.PricePerQuantity,
+			QuantityUnit:     *msg.Item.QuantityUnit,
+			Url:              msg.Item.Url,
+			ImageUrl:         msg.Item.ImageUrl,
+			MarketName:       msg.Market.Name,
+			MarketLocation:   msg.Market.Location,
+		}
+		log.Printf("msg: %+v\n", req)
 
 		response, err := client.CreateItem(context.Background(), &req)
 		if err != nil {
 			log.Println(err)
 		}
-		log.Printf("payload: %+v\n", msg.Payload)
-		log.Printf("req: %+v\n", response)
+		log.Printf("payload: %+v\n", msgStr.Payload)
+		log.Printf("resp: %+v\n", response)
 	}
 }

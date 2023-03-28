@@ -2,10 +2,13 @@ module github.com/MarketScrapperAPI/QueueWorker
 
 go 1.17
 
-require github.com/go-redis/redis/v8 v8.11.5
+require (
+	github.com/MarketScrapperAPI/ItemAPI v0.0.0-20230328185304-3dbc2a6f7541
+	github.com/go-redis/redis/v8 v8.11.5
+	google.golang.org/grpc v1.50.1
+)
 
 require (
-	github.com/MarketScrapperAPI/ItemAPI v0.0.0-20221121231744-c28fd875bdf9 // indirect
 	github.com/gofrs/uuid v4.3.1+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
@@ -22,8 +25,7 @@ require (
 	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
-	google.golang.org/grpc v1.50.1 // indirect
+	google.golang.org/genproto v0.0.0-20210701191553-46259e63a0a9 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gorm.io/driver/postgres v1.4.5 // indirect
 	gorm.io/gorm v1.24.1 // indirect
