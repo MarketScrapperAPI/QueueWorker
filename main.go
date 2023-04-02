@@ -85,8 +85,6 @@ func main() {
 			panic(err)
 		}
 
-		log.Printf("msg: %+v\n", msg)
-
 		req := pb.CreateItemRequest{
 			Name:             msg.Item.Name,
 			Brand:            msg.Item.Brand,
@@ -99,7 +97,6 @@ func main() {
 			MarketName:       msg.Market.Name,
 			MarketLocation:   msg.Market.Location,
 		}
-		log.Printf("msg: %+v\n", req)
 
 		response, err := client.CreateItem(context.Background(), &req)
 		if err != nil {
