@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: queue-worker
-        image: mrbolas/queue-worker:v1.1-release
+        image: mrbolas/queue_worker:v1.1-release
         ports:
         - containerPort: 8080
         imagePullPolicy: Always
